@@ -1,11 +1,26 @@
 #don't delete
+
 import requests
 import subprocess
 import os
 import tempfile
 import importlib.util
 
-#pypi blocked by proxy
+def is_python_installed():
+    try:
+        subprocess.check_output(['python', '--version'])
+        return True
+    except subprocess.CalledProcessError:
+        return False
+    except FileNotFoundError:
+        try:
+            subprocess.check_output(['python3', '--version'])
+            return True
+        except subprocess.CalledProcessError:
+            return False
+        except FileNotFoundError:
+            return False
+
 def is_package_installed(package_name):
     package_spec = importlib.util.find_spec(package_name)
     return package_spec is not None
@@ -26,8 +41,13 @@ def download_and_install_whls(repo_url):
                     download_and_install_whl(url, file['name'])
                 else:
                     print(f"Package {package_name} is already installed.")
+    else:
+        print(f"Failed to retrieve the list of files. Status code: {response.status_code}")
 
 def download_and_install_whl(url, filename):
+    if not is_python_installed():
+        print("Python is not installed. Aborting")
+        return
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.whl') as tmp_file:
             response = requests.get(url)
