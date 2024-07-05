@@ -58,8 +58,4 @@ And finally, compile to .exe :
 pyinstaller client.py --onefile --noconsole
 ```
 ## Finally :
-<<<<<<< HEAD
 Now whether you are on Linux or Windows, you have your client in ```dist/*.exe```, it can be injected as ```SecurityHealthSystray.exe``` for autorun on user logon (```C:\Windows\system32\SecurityHealthSystray.exe```)
-=======
-Now whether you are on Linux or Windows, you have your client in ```dist/*.exe```, it can be injected as ```SecurityHealthSystray.exe``` for autorun on user logon (```C:\Windows\system32\SecurityHealthSystray.exe```)
->>>>>>> 2786ba1856880ccab5ea71e65cc22b8b9d916956
