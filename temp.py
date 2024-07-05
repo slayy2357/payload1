@@ -5,7 +5,6 @@ import os
 import tempfile
 import importlib.util
 import string
-import argparse
 
 def is_python_installed():
     try:
