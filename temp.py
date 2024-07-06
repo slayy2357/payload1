@@ -147,7 +147,7 @@ def get_folder_size(folder_path):
 
 def format_size(size_bytes):
     if size_bytes == 0:
-        return "0 Go"
+        return "0"
     size_gb = size_bytes / (1024 ** 3)
     return f"{size_gb:.2f}"
 
