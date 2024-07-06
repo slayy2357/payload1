@@ -6,6 +6,7 @@ import tempfile
 import importlib.util
 import string
 import time
+import sys
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -163,6 +164,8 @@ for disks in disks:
     total_size = format_size(total_size)
     #Send infos
     send_message(chat_id, token, disks + " : " + total_size + " go")
+    #Print infos
+    print(f"Starting tree : {disks}, total size : {str(total_size)} go")
     #Start timer
     start_time = time.time()
     #Tree
@@ -174,4 +177,7 @@ for disks in disks:
     #Calcul time to make action
     elapsed_time = end_time - start_time
     #Send
-    send_message(chat_id, token, elapsed_time:.2f)
+    send_message(chat_id, token, "Done in : " + str(elapsed_time) + " seconds")
+    #Print infos
+    print(f"Done in {str(elapsed_time)} seconds")
+    sys.exit()
