@@ -160,7 +160,6 @@ for disks in disks:
     #Calcul disk size
     total_size = get_folder_size(disks)
     total_size = format_size(total_size)
-    print(total_size)
     #Send infos
     send_message(chat_id, token, disks + " : " + total_size + " go")
     #Tree
