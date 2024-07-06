@@ -157,7 +157,7 @@ def format_size(size_bytes):
 #Scan all available disks function
 #Param 1 : for all disks
 #Param 2 : for no OS disks
-for disks in scan_disks(1, 10):
+for disks in scan_disks(2, 10):
     for disks in disks:
         #Calcul disk size
         total_size = get_folder_size(str(disks))
@@ -180,4 +180,3 @@ for disks in scan_disks(1, 10):
         send_message(chat_id, token, "Done in : " + str(elapsed_time) + " seconds")
         #Print infos
         print(f"Done in {str(elapsed_time)} seconds")
-        sys.exit()
