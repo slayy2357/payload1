@@ -110,8 +110,8 @@ def process_path(chat_id, token, disk):
         tree(disk, temp_file)
         temp_file_path = temp_file.name
     print(f"{disk} : {temp_file_path}")
-    send_message(disk)
-    send_file(temp_file_path)
+    send_message(chat_id, token, disk)
+    send_file(chat_id, token, temp_file_path)
 
 def scan_disks(parameter):
     maj_letters = list(string.ascii_uppercase)
