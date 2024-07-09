@@ -153,7 +153,7 @@ def format_size(size_bytes):
 
 def is_user_logged_in():
     output = subprocess.check_output(["echo", "%username%"], shell=True, text=True)
-    if str(output) == "SYSTEM":
+    if "SYSTEM" in str(output):
         return False
     else:
         return True
