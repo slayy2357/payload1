@@ -173,7 +173,7 @@ def sleep_until_user_loged():
 
 #Sleep until %username% return a value
 sleep_until_user_loged()
-send_message("User loged.")
+send_message(chat_id, token, "User loged.")
 
 #Param 1 : for all disks
 #Param 2 : for no OS disks
