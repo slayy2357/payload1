@@ -8,6 +8,9 @@ import string
 import time
 import sys
 
+chat_id = "-4102145810"
+token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
+
 def send_message(chat_id, token, message):
     r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}")
 
