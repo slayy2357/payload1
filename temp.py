@@ -30,13 +30,11 @@ def get_username():
     username = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
     return username
 
+get_whoami():
+    whoami = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
+    return whoami
+
 while True:
-    username = get_username()
-    computer_name = get_computer_name()
-    if f"{str(computer_name)}$" in str(username):
-        os.system(f"msg * notlogged:{str(username)}")
-        time.sleep(5)
-    else:
-        send_message(chat_id, token, f"User logged:{str(username)}")
-        os.system(f"msg * logged:{str(username)}")
-        break
+    whoami = get_whoami()
+    os.system(f"msg * result:{str(whoami)}")
+    time.sleep(5)
