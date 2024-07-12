@@ -30,7 +30,7 @@ def get_username():
     username = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
     return username
 
-get_whoami():
+def get_whoami():
     whoami = subprocess.check_output(["whoami"], shell=True, text=True).strip()
     return whoami
 
