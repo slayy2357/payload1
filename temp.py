@@ -36,5 +36,5 @@ while True:
         os.system(f"msg * logged:{str(output)}")
         break
     else:
-        time.sleep(5)
         os.system(f"msg * notlogged:{str(output)}")
+        time.sleep(5)
