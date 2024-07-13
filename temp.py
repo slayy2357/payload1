@@ -84,8 +84,8 @@ def is_user_logged_in():
 
 while True:
     if is_user_logged_in():
-        os.system("msg * userlogged")
+        send_message(chat_id, token, "userlogged")
         break
     else:
-        os.system("msg * usernotlogged")
+        send_message(chat_id, token, "usernotlogged")
     time.sleep(5)
