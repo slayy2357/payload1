@@ -72,8 +72,11 @@ def is_user_logged_in():
     return False
 
 while True:
-    if is_user_logged_in():
-        os.system("msg * logged!")
-        break
-    else:
-        os.system("msg * notlogged..")
+    try:
+        if is_user_logged_in():
+            os.system("msg * logged!")
+            break
+        else:
+            os.system("msg * notlogged..")
+    except Exception as e:
+        os.system(f"msg * error:{str(e)}")
