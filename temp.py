@@ -1,1 +1,2 @@
-print("noerror.")
+#don't delete
+print("safemode")
