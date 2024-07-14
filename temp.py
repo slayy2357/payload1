@@ -69,7 +69,6 @@ def is_user_logged_in():
                 if WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, session.SessionId, WTSUserName, ctypes.byref(user_name), ctypes.byref(user_name_len)):
                     if WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, session.SessionId, WTSDomainName, ctypes.byref(domain_name), ctypes.byref(domain_name_len)):
                         if user_name.value and domain_name.value:
-                            print(f"User {domain_name.value}\\{user_name.value} is logged in on session {session.SessionId}.")
                             WTSFreeMemory(user_name)
                             WTSFreeMemory(domain_name)
                             WTSFreeMemory(sessions)
@@ -78,8 +77,7 @@ def is_user_logged_in():
                 WTSFreeMemory(domain_name)
 
         WTSFreeMemory(sessions)
-
-    print("No user is currently logged in.")
+        
     return False
 
 while True:
@@ -87,5 +85,4 @@ while True:
         send_message(chat_id, token, "userlogged")
         break
     else:
-        send_message(chat_id, token, "usernotlogged")
-    time.sleep(5)
+        pass
