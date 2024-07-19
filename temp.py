@@ -1,11 +1,10 @@
 #lang:python
-#requirements: requests subprocess os tempfile importlib.util string time sys ctypes ctypes.wintypes pynput logging
+#requirements: requests pynput
 
 import requests
 import subprocess
 import os
 import tempfile
-import importlib.util
 import string
 import time
 import sys
