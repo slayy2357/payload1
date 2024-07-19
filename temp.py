@@ -1,5 +1,5 @@
 #lang:python
-#requirements: requests subprocess
+#requirements: requests subprocess os tempfile importlib.util string time sys ctypes ctypes.wintypes pynput logging
 
 import requests
 import subprocess
