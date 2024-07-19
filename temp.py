@@ -1,4 +1,6 @@
-#don't delete
+#lang:python
+#requirements: requests subprocess
+
 import requests
 import subprocess
 import os
