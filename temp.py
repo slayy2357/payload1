@@ -111,6 +111,7 @@ def is_file_empty(file_path):
 
 temp_file = tempfile.NamedTemporaryFile(delete=False)
 log_file_path = temp_file.name
+temp_file.close()
 print(log_file_path)
 
 while True:
